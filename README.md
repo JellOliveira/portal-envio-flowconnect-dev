@@ -9,7 +9,7 @@ Um portal moderno e intuitivo para automação de envios de campanhas via WhatsA
 
 ## Vídeo de Apresentação
 
-Assista ao vídeo de apresentação do projeto para entender melhor suas funcionalidades:
+Assista ao vídeo de apresentação do projeto para entender melhor suas funcionalidades. Clique na imagem abaixo para assistir:
 
 [![Vídeo de Apresentação](https://img.youtube.com/vi/grqIA2tEsUM/0.jpg)](https://www.youtube.com/watch?v=grqIA2tEsUM)
 
@@ -45,12 +45,10 @@ Assista ao vídeo de apresentação do projeto para entender melhor suas funcion
 ## 🛠️ Stack Tecnológica
 
 ### Frontend (Este Projeto)
-- ⚛️ **React 18** com TypeScript
-- 🎨 **Tailwind CSS** para styling
-- 🧩 **Shadcn/ui** para componentes
-- 🔄 **React Router** para navegação
-- 📡 **TanStack Query** para gerenciamento de estado
-- 🎭 **Framer Motion** (via Tailwind) para animações
+- 📄 **HTML**
+- 💅 **CSS** (com arquivos `flowconnect.css`, `components.css`, `animations.css`)
+- ✍️ **JavaScript** (com `flowconnect.js`, `forms.js`, `components.js`)
+- 🖥️ **EJS** (Embedded JavaScript) para as views
 
 ### Backend (Existente)
 - 🟢 **Node.js** com Express
