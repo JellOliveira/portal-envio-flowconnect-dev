@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Portal FlowConnect Dev</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/lxBoZrP.png">
+    <link rel="stylesheet" href="/css/flowconnect.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Estilos específicos para a página admin */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .admin-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header moderno */
+        .nav-modern {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .brand-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .brand-subtitle {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Container principal */
+        .admin-container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .admin-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 0 0 0.5rem 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        /* Seções */
+        .admin-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            color: #3b82f6;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Listas */
+        .activity-list, .pages-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item, .page-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s ease;
+        }
+
+        .activity-item:hover, .page-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .activity-item:last-child, .page-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-text, .page-text {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .activity-time, .page-visits {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tabela */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .users-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .users-table td {
+            color: #6b7280;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .role-mestre {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .role-cliente {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Loading states */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 1rem;
+            }
+
+            .brand-content {
+                gap: 0.75rem;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-title {
+                font-size: 1.25rem;
+            }
+
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .admin-section {
+                padding: 1.5rem;
+            }
+
+            .users-table {
+                font-size: 0.875rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Header Moderno -->
+        <header class="nav-modern">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="brand-content">
+                        <img src="https://i.imgur.com/lxBoZrP.png" alt="FlowConnect Dev" class="brand-logo">
+                        <div>
+                            <h1 class="brand-title">FlowConnect Dev</h1>
+                            <p class="brand-subtitle">Portal de Automação</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <div class="nav-actions">
+                    <a href="/" class="back-button">
+                        <i data-lucide="arrow-left"></i>
+                        Voltar ao Início
+                    </a>
+                    
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <%= user.email.charAt(0).toUpperCase() %>
+                        </div>
+                        <div class="user-details">
+                            <p class="user-email"><%= user.email %></p>
+                            <p class="user-role">Administrador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Container Principal -->
+        <main class="admin-container">
+            <!-- Header da Página -->
+            <div class="admin-header">
+                <h1 class="admin-title">Painel de Administração</h1>
+                <p class="admin-subtitle">Gerencie usuários e monitore o desempenho do sistema</p>
+            </div>
+
+            <!-- Seção de Dashboard SLA -->
+            <section class="admin-section">
+                <h2 class="section-title">
+                    <i data-lucide="activity" class="section-icon"></i>
+                    Dashboard SLA - Controle do Site
+                </h2>
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="visits-today">0</div>
+                        <div class="metric-label">Visitas Hoje</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="active-users">0</div>
+                        <div class="metric-label">Usuários Ativos</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="campaigns-sent">0</div>
+                        <div class="metric-label">Campanhas Enviadas</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="scheduled-messages">0</div>
+                        <div class="metric-label">Mensagens Agendadas</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="admin-section" style="flex: 1;">
+                        <h3 class="section-title">
+                            <i data-lucide="list-ordered" class="section-icon"></i>
+                            Atividade Recente
+                        </h3>
+                        <ul id="recent-activity-list" class="activity-list">
+                            <li>Carregando...</li>
+                        </ul>
+                    </div>
+                    <div class="admin-section" style="flex: 1;">
+                        <h3 class="section-title">
+                            <i data-lucide="bar-chart-2" class="section-icon"></i>
+                            Páginas Mais Visitadas
+                        </h3>
+                        <ul id="most-visited-pages-list" class="pages-list">
+                            <li>Carregando...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Gerenciamento de Usuários -->
+            <section class="admin-section">
+                <h2 class="section-title">
+                    <i data-lucide="users" class="section-icon"></i>
+                    Gerenciamento de Usuários
+                </h2>
+
+                <h3>Convidar Novo Usuário</h3>
+                <form id="invite-user-form">
+                    <div class="form-group">
+                        <label for="invite-email" class="form-label">Email do Novo Usuário:</label>
+                        <input type="email" id="invite-email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invite-role" class="form-label">Papel (Role):</label>
+                        <select id="invite-role" class="form-select">
+                            <option value="cliente">Cliente</option>
+                            <option value="mestre">Mestre</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Enviar Convite</button>
+                </form>
+
+                <h3 style="margin-top: 2rem;">Usuários Cadastrados</h3>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Papel</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="3">Carregando usuários...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <div id="toastContainer" class="toast-container"></div>
+        <footer class="footer">
+            <div class="footer-content">
+                © 2025 Todos os direitos reservados à Desenvolvedora <strong>Jéssica Oliveira Meira</strong>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/js/flowconnect.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            lucide.createIcons();
+            loadDashboardData();
+            loadUsers();
+            loadRecentActivity();
+            loadPopularPages();
+
+            // Formulário de convite de usuário
+            document.getElementById("invite-user-form").addEventListener("submit", async function(e) {
+                e.preventDefault();
+                const email = document.getElementById("invite-email").value;
+                const papel = document.getElementById("invite-role").value;
+
+                try {
+                    const response = await fetch("/api/invite-user", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email, papel })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || "Erro ao enviar convite");
+                    FlowConnect.showToast(data.message, "success");
+                    loadUsers(); // Recarregar lista de usuários
+                    document.getElementById("invite-user-form").reset();
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                }
+            });
+
+            // Função para carregar dados do dashboard
+            async function loadDashboardData() {
+                try {
+                    const response = await fetch("/api/dashboard/stats");
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || "Erro ao carregar dados do dashboard");
+                    
+                    document.getElementById("visits-today").textContent = data.totalVisits;
+                    document.getElementById("active-users").textContent = data.activeUsers;
+                    document.getElementById("campaigns-sent").textContent = data.campaignsSent;
+                    document.getElementById("scheduled-messages").textContent = data.messagesScheduled;
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                    console.error("Erro ao carregar dados do dashboard:", error);
+                }
+            }
+
+            // Função para carregar usuários
+            async function loadUsers() {
+                try {
+                    const response = await fetch("/api/users");
+                    const users = await response.json();
+                    if (!response.ok) throw new Error(users.message || "Erro ao carregar usuários");
+
+                    const tableBody = document.getElementById("users-table-body");
+                    tableBody.innerHTML = "";
+                    if (users.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="3">Nenhum usuário cadastrado.</td></tr>';
+                        return;
+                    }
+                    users.forEach(user => {
+                        const row = tableBody.insertRow();
+                        row.insertCell().textContent = user.email;
+                        const roleCell = row.insertCell();
+                        roleCell.innerHTML = `<span class="role-badge role-${user.papel}">${user.papel}</span>`;
+                        const actionCell = row.insertCell();
+                        if (user.id !== "<%= user.id %>") { // Não permitir excluir o próprio usuário logado
+                            const deleteButton = document.createElement("button");
+                            deleteButton.textContent = "Excluir";
+                            deleteButton.className = "btn-danger";
+                            deleteButton.onclick = () => deleteUser(user.id, user.email);
+                            actionCell.appendChild(deleteButton);
+                        }
+                    });
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                    console.error("Erro ao carregar usuários:", error);
+                }
+            }
+
+            // Função para excluir usuário
+            async function deleteUser(userId, userEmail) {
+                if (!confirm(`Tem certeza que deseja excluir o usuário ${userEmail}?`)) {
+                    return;
+                }
+                try {
+                    const response = await fetch(`/api/users/${userId}`, {
+                        method: "DELETE"
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || "Erro ao excluir usuário");
+                    FlowConnect.showToast(data.message, "success");
+                    loadUsers(); // Recarregar lista de usuários
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                    console.error("Erro ao excluir usuário:", error);
+                }
+            }
+
+            // Função para carregar atividade recente
+            async function loadRecentActivity() {
+                try {
+                    const response = await fetch("/api/dashboard/activities");
+                    const activities = await response.json();
+                    if (!response.ok) throw new Error(activities.message || "Erro ao carregar atividades recentes");
+
+                    const activityList = document.getElementById("recent-activity-list");
+                    activityList.innerHTML = "";
+                    if (activities.length === 0) {
+                        activityList.innerHTML = '<li>Nenhuma atividade recente.</li>';
+                        return;
+                    }
+                    activities.forEach(activity => {
+                        const li = document.createElement("li");
+                        li.className = "activity-item";
+                        li.innerHTML = `<span class="activity-text">${activity.action}</span><span class="activity-time">${activity.time}</span>`;
+                        activityList.appendChild(li);
+                    });
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                    console.error("Erro ao carregar atividades recentes:", error);
+                }
+            }
+
+            // Função para carregar páginas mais visitadas
+            async function loadPopularPages() {
+                try {
+                    const response = await fetch("/api/dashboard/popular-pages");
+                    const pages = await response.json();
+                    if (!response.ok) throw new Error(pages.message || "Erro ao carregar páginas populares");
+
+                    const pagesList = document.getElementById("most-visited-pages-list");
+                    pagesList.innerHTML = "";
+                    if (pages.length === 0) {
+                        pagesList.innerHTML = '<li>Nenhuma página popular.</li>';
+                        return;
+                    }
+                    pages.forEach(page => {
+                        const li = document.createElement("li");
+                        li.className = "page-item";
+                        li.innerHTML = `<span class="page-text">${page.page}</span><span class="page-visits">${page.visits} visitas</span>`;
+                        pagesList.appendChild(li);
+                    });
+                } catch (error) {
+                    FlowConnect.showToast(error.message, "error");
+                    console.error("Erro ao carregar páginas populares:", error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

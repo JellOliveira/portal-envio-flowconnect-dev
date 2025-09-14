@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal FlowConnect Dev</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/lxBoZrP.png">
+    <link rel="stylesheet" href="/css/flowconnect.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="wrapper" style="display: flex; flex-direction: column; min-height: 100vh;">
+        <header class="nav-modern">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="brand-content">
+                        <img src="https://i.imgur.com/lxBoZrP.png" alt="FlowConnect Dev" class="brand-logo">
+                        <div>
+                            <h1 class="brand-title">FlowConnect Dev</h1>
+                            <p class="brand-subtitle">Portal de Automação</p>
+                        </div>
+                    </div>
+                </a>
+                <nav class="nav-menu">
+                    <button class="nav-btn active" onclick="window.location.href='/'">Início</button>
+                    <% if (user && user.papel === 'mestre') { %>
+                        <button class="nav-btn" onclick="window.location.href='/admin'">Admin</button>
+                    <% } %>
+                    <button class="nav-btn" onclick="FlowConnect.openModal('contacts-modal')">Contatos</button>
+                    <button class="nav-btn" onclick="FlowConnect.openModal('help-modal')">Ajuda</button>
+                </nav>
+                <div class="profile-menu">
+                    <button id="profileBtn" class="profile-btn">
+                        <div class="avatar-modern"><%= user.displayName.substring(0, 2).toUpperCase() %></div>
+                        <div class="profile-info">
+                            <p class="profile-name"><%= user.displayName %></p>
+                            <p class="profile-email"><%= user.email %></p>
+                        </div>
+                    </button>
+                    
+                    <div id="profileDropdown" class="dropdown-menu">
+                        <button id="logout-button" class="dropdown-item logout">
+                            <i data-lucide="log-out"></i>
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content container" style="flex-grow: 1;">
+            <div class="container">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <div class="hero-logo">
+                        <img src="https://i.imgur.com/lxBoZrP.png" alt="FlowConnect Dev" class="hero-logo-img">
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Portal de Envio via Whatsapp</span> 
+                    </h1>
+                    <p class="hero-description">
+                        Gerencie suas campanhas de WhatsApp e agendamentos 
+                        de forma simples e eficiente
+                    </p>
+                </section>
+
+                <!-- Forms Section -->
+                <section class="forms-section">
+                    <div class="forms-grid">
+                        <!-- Enviar Campanha -->
+                    <div class="card-modern animate-on-scroll">
+                        <div class="card-header">
+                            <div class="card-icon gradient-primary"><i data-lucide="send"></i></div>
+                            <div>
+                                <h2 class="card-title">Enviar Campanha de WhatsApp</h2>
+                                <p class="card-description">Configure e envie sua campanha de mensagens</p>
+                            </div>
+                        </div>
+                        <form id="campaign-form" class="form">
+                            <div class="form-group">
+                                <label for="nome_campanha" class="form-label"><i data-lucide="tag"></i> Nome da Campanha</label>
+                                <input type="text" id="nome_campanha" name="nome_campanha" class="form-input" placeholder="Ex: Promoção Black Friday" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="link_planilha" class="form-label"><i data-lucide="link"></i> Link da Planilha Google Sheets (Contatos)</label>
+                                <input type="url" id="link_planilha" name="link_planilha" class="form-input" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                                <div class="form-tip">💡 Dica: Crie uma planilha com duas colunas apenas: nome e whatsapp (tudo minúsculo). Use a primeira linha como cabeçalho.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="copy_mensagem" class="form-label"><i data-lucide="message-square"></i> Texto da Mensagem (Copy)</label>
+                                <textarea id="copy_mensagem" name="copy_mensagem" class="form-textarea" placeholder="Olá {nome}! Temos uma oferta especial para você..." required></textarea>
+                                <div class="form-help">Use <code>{nome}</code> para personalizar a mensagem com o nome do contato</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="link_grupo" class="form-label"><i data-lucide="link"></i> Link do Grupo (Opcional)</label>
+                                <input type="url" id="link_grupo" name="link_grupo" class="form-input" placeholder="https://chat.whatsapp.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label for="assinatura_campanha" class="form-label"><i data-lucide="signature"></i> Assinatura (Opcional)</label>
+                                <input type="text" id="assinatura_campanha" name="assinatura_campanha" class="form-input" placeholder="Ex: Time FlowConnect">
+                            </div>
+                            <button type="submit" class="btn-gradient-primary"><i data-lucide="send"></i><span>Enviar Campanha</span></button>
+                        </form>
+                    </div>
+
+                    <!-- Agendar Mensagem - FORMULÁRIO CORRIGIDO -->
+                    <div class="card-modern animate-on-scroll">
+                        <div class="card-header">
+                            <div class="card-icon gradient-secondary"><i data-lucide="calendar-clock"></i></div>
+                            <div>
+                                <h2 class="card-title">Agendamento de Mensagem</h2>
+                                <p class="card-description">Agende mensagens para serem enviadas automaticamente</p>
+                            </div>
+                        </div>
+                        <form id="schedule-form" class="form">
+                            <div class="form-group">
+                                <label for="id_grupo_whatsapp" class="form-label"><i data-lucide="phone"></i> Link do Grupo ou WhatsApp do Aluno</label>
+                                <input type="text" id="id_grupo_whatsapp" name="id_grupo_whatsapp" class="form-input" placeholder="https://chat.whatsapp.com/... ou 55..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="data_envio" class="form-label"><i data-lucide="calendar"></i> Data e Hora do Envio</label>
+                                <input type="datetime-local" id="data_envio" name="data_envio" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="copy_mensagem_aula" class="form-label"><i data-lucide="message-square"></i> Texto da Mensagem (Copy)</label>
+                                <textarea id="copy_mensagem_aula" name="copy_mensagem_aula" class="form-textarea" placeholder="Digite sua mensagem aqui..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="link_aula" class="form-label"><i data-lucide="link"></i> Link da Aula/Venda (Opcional)</label>
+                                <input type="url" id="link_aula" name="link_aula" class="form-input" placeholder="https://us02web.zoom.us/j/...">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="id_reuniao" class="form-label"><i data-lucide="hash"></i> ID da Reunião (Opcional)</label>
+                                    <input type="text" id="id_reuniao" name="id_reuniao" class="form-input" placeholder="Ex: 845 9882 6611">
+                                </div>
+                                <div class="form-group">
+                                    <label for="senha_reuniao" class="form-label"><i data-lucide="key"></i> Senha da Reunião (Opcional)</label>
+                                    <input type="text" id="senha_reuniao" name="senha_reuniao" class="form-input" placeholder="Ex: 815297">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="assinatura_agendamento" class="form-label"><i data-lucide="signature"></i> Assinatura (Opcional)</label>
+                                <input type="text" id="assinatura_agendamento" name="assinatura_agendamento" class="form-input" placeholder="Ex: Time FlowConnect">
+                            </div>
+                            <button type="submit" class="btn-gradient-secondary"><i data-lucide="calendar-check"></i><span>Agendar Mensagem</span></button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Features Section -->
+                <section class="features-section animate-on-scroll">
+                    <h2>Recursos Principais</h2>
+                    <p class="features-description">
+                        Tudo que você precisa para automatizar suas comunicações via WhatsApp
+                    </p>
+                    <div class="features-grid">
+                        <div class="feature-card animate-on-scroll">
+                            <div class="feature-icon">
+                                <i data-lucide="rocket"></i>
+                            </div>
+                            <h3>Campanhas em Massa</h3>
+                            <p>Envie mensagens personalizadas para centenas de contatos simultaneamente.</p>
+                        </div>
+                        <div class="feature-card animate-on-scroll">
+                            <div class="feature-icon">
+                                <i data-lucide="calendar-check"></i>
+                            </div>
+                            <h3>Agendamento Inteligente</h3>
+                            <p>Programe suas mensagens para o momento ideal de engajamento.</p>
+                        </div>
+                        <div class="feature-card animate-on-scroll">
+                            <div class="feature-icon">
+                                <i data-lucide="zap"></i>
+                            </div>
+                            <h3>Integração N8N</h3>
+                            <p>Powered by n8n para máxima confiabilidade e performance.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div id="toastContainer" class="toast-container"></div>
+        <footer class="footer">
+            <div class="footer-content">
+                © 2025 Todos os direitos reservados.
+            </div>
+        </footer>
+    </div>    <!-- WhatsApp Float Button -->
+    <!-- O link do WhatsApp foi removido para privacidade. Adicione o seu link aqui: <div id="whatsappFloat" class="whatsapp-float" onclick="window.open(\"[SEU_LINK_WHATSAPP]?text=Precisa%20de%20ajuda%3F%20Suporte%20aqui\", \"_blank\")"><i data-lucide="phone"></i></div> -->
+
+    <!-- MODAL DE CONTATOS -->
+    <div id="contacts-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="FlowConnect.closeModal('contacts-modal')">&times;</button>
+            <div class="modal-header">
+                <!-- <img src="[LINK_PARA_SEU_AVATAR]" alt="Seu Nome" class="modal-avatar"> -->
+                <h2>Desenvolvedor(a)</h2>
+                <p>Desenvolvedora</p>
+            </div>
+            <div class="modal-body">
+                <div class="contact-info">
+                    <p><strong>Suporte:</strong> [SEU TELEFONE]</p>
+                    <p><strong>E-mail:</strong> [SEU E-MAIL]</p>
+                </div>
+                <div class="contact-buttons">
+                    <a href="[SEU_LINK_WHATSAPP]" target="_blank" class="contact-link whatsapp">
+                        <i data-lucide="phone"></i> WhatsApp
+                    </a>
+                    <a href="mailto:[SEU_EMAIL]" class="contact-link email">
+                        <i data-lucide="mail"></i> E-mail
+                    </a>
+                    <a href="[SEU_LINKEDIN]" target="_blank" class="contact-link linkedin">
+                        <i data-lucide="linkedin"></i> LinkedIn
+                    </a>
+                    <a href="[SEU_GITHUB]" target="_blank" class="contact-link github">
+                        <i data-lucide="github"></i> GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE AJUDA -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="FlowConnect.closeModal('help-modal')">&times;</button>
+            <div class="modal-header">
+                <!-- <img src="[LINK_PARA_SEU_AVATAR]" alt="Seu Nome" class="modal-avatar"> -->
+                <h2>Central de Ajuda</h2>
+                <p>Suporte e Orientações</p>
+            </div>
+                
+                <div class="modal-body">
+                <div class="help-section">
+                    <h4><i data-lucide="video"></i> Vídeo Tutorial:</h4>
+                 <a href="https://youtube.com/watch?v=grqIA2tEsUM" target="_blank"
+class="help-link">
+                        Assista ao Tutorial Completo
+                    </a>
+                </div> 
+                
+                <div class="help-section">
+                    <h4><i data-lucide="file-text"></i> Guia Escrito:</h4>
+                    <a href="https://docs.google.com/document/d/1hbdTBOnf7niaMP-8jhN0leSj39Vi4W_O0A95QGzXfBg/edit?usp=sharing" target="_blank" class="help-link">
+                        Acesse o Guia Completo
+                </div>
+                
+                <div class="help-section">
+                    <h4><i data-lucide="grid-3x3"></i> Modelo da Planilha:</h4>
+                    <a href="https://docs.google.com/spreadsheets/d/1TdXhI38gbj5Wi7B3I61wt0CKWnO895eZpNoCGPmOwT4/copy" target="_blank" class="help-link">
+                        Copiar Modelo da Planilha
+                    </a>
+                </div>
+
+                <div class="help-contact">
+                    <p>Para suporte imediato, entre em contato pelo WhatsApp:</p>
+                    <a href="https://wa.me/557193850852" target="_blank" class="contact-link whatsapp">
+                        <i data-lucide="phone"></i> +55 71 9385-0852
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/flowconnect.js"></script>
+    <script src="/js/forms.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+
