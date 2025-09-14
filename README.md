@@ -6,7 +6,7 @@ Um portal moderno e intuitivo para automação de envios de campanhas via WhatsA
 
 ## Vídeo de Apresentação
 
-Assista ao vídeo de apresentação do projeto para entender melhor suas funcionalidades:
+Assista ao vídeo de apresentação do projeto para entender melhor suas funcionalidades, é só clicar na imagem abaixo:
 
 [![Vídeo de Apresentação](https://img.youtube.com/vi/grqIA2tEsUM/0.jpg)](https://www.youtube.com/watch?v=grqIA2tEsUM)
 
